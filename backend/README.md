@@ -9,6 +9,8 @@
 $ python -m venv venv
 $ source ./venv/bin/activate
 $ pip install -r requirements.txt
-$ django-admin startproject conf .
-$ django-admin startapp apps
+$ django-admin startproject config .
+$ mkdir apps
+$ cd apps
+$ django-admin startapp forms
 ```

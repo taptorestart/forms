@@ -1,2 +1,10 @@
+# Django
 Django==4.2
+djangorestframework==3.14.0
+mysqlclient==2.1.1
+drf-spectacular==0.26.2
+
+python-dotenv==1.0.0
+
+# Formatter
 black==23.3.0
