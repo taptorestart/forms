@@ -26,17 +26,19 @@ class Form(models.Model):
 
 
 class Component(models.Model):
-    TEXT = 101
-    INPUT, TEXTAREA, RADIO, CHECKBOX, SELECT = 201, 202, 203, 204, 205
+    TITLE = 100
+    TEXT, TEXTAREA = 200, 201
+    RADIO, CHECKBOX, SELECT = 300, 301, 302
     TYPE_CHOICES = (
+        (TITLE, "TITLE"),
         (TEXT, "TEXT"),
-        (INPUT, "INPUT"),
         (TEXTAREA, "TEXTAREA"),
         (RADIO, "RADIO"),
         (CHECKBOX, "CHECKBOX"),
         (SELECT, "SELECT"),
     )
-    QUESTION_TYPES = (INPUT, TEXTAREA, RADIO, CHECKBOX, SELECT)
+    QUESTION_TYPES = (TEXT, TEXTAREA, RADIO, CHECKBOX, SELECT)
+    QUESTION_SELECT_TYPES = (RADIO, CHECKBOX, SELECT)
 
     form = models.ForeignKey(Form, related_name="+", on_delete=models.CASCADE, db_comment="form FK")
     type = models.SmallIntegerField(verbose_name=_("type"), choices=TYPE_CHOICES, db_comment="type")
