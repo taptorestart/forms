@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import permissions, mixins
 from rest_framework.viewsets import GenericViewSet
 
@@ -6,6 +7,7 @@ from apps.forms.models import Form, Component, Choice
 
 
 class FormViewSet(
+    mixins.ListModelMixin,
     mixins.CreateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
@@ -17,13 +19,17 @@ class FormViewSet(
     http_method_names = ["post", "get", "patch", "delete"]
     lookup_field = "slug"
 
+    def get_queryset(self):
+        now = timezone.now()
+        return Form.objects.filter(start_date__lte=now, end_date__gte=now)
+
     def get_serializer_class(self):
         if self.action == "retrieve":
             return FormRetrieveSerializer
         return FormSerializer
 
     def get_permissions(self):
-        if self.action == "retrieve":
+        if self.action in ["list", "retrieve"]:
             return (permissions.AllowAny(),)
         return (permissions.IsAdminUser(),)
 
