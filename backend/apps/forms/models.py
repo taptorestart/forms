@@ -45,10 +45,8 @@ class Component(models.Model):
     max_allowed_size = models.SmallIntegerField(
         verbose_name=_("max allowed size"), null=True, blank=True, db_comment="max allowed size"
     )
-    title = models.CharField(verbose_name=_("title"), null=True, blank=True, max_length=255, db_comment="title")
-    description = models.CharField(
-        verbose_name=_("description"), null=True, blank=True, max_length=500, db_comment="description"
-    )
+    title = models.CharField(verbose_name=_("title"), blank=True, max_length=255, db_comment="title")
+    description = models.CharField(verbose_name=_("description"), blank=True, max_length=500, db_comment="description")
     order = models.SmallIntegerField(verbose_name=_("order"), default=0, db_comment="order")
     updated_by = models.ForeignKey(
         User,
@@ -119,7 +117,7 @@ class Answer(models.Model):
     question_title = models.CharField(
         verbose_name=_("question title"), max_length=255, blank=True, db_comment="component title"
     )
-    answer = models.CharField(verbose_name=_("answer"), max_length=1000, db_comment="text")
+    answer = models.CharField(verbose_name=_("answer"), blank=True, max_length=1000, db_comment="text")
     choice = models.ForeignKey(
         Choice,
         verbose_name=_("choice"),

@@ -1,9 +1,18 @@
 from django.utils import timezone
-from rest_framework import permissions, mixins
+from rest_framework import permissions, mixins, status
+from rest_framework.decorators import action
+from rest_framework.generics import get_object_or_404
+from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from apis.v1.forms.serializers import FormRetrieveSerializer, FormSerializer, ComponentSerializer, ChoiceSerializer
-from apps.forms.models import Form, Component, Choice
+from apis.v1.forms.serializers import (
+    FormRetrieveSerializer,
+    FormSerializer,
+    ComponentSerializer,
+    ChoiceSerializer,
+    SubmitSerializer,
+)
+from apps.forms.models import Form, Component, Choice, Answer, Submit
 
 
 class FormViewSet(
@@ -26,12 +35,36 @@ class FormViewSet(
     def get_serializer_class(self):
         if self.action == "retrieve":
             return FormRetrieveSerializer
+        if self.action == "submit":
+            return SubmitSerializer
         return FormSerializer
 
     def get_permissions(self):
         if self.action in ["list", "retrieve"]:
             return (permissions.AllowAny(),)
         return (permissions.IsAdminUser(),)
+
+    @action(detail=True, methods=["post"])
+    def submit(self, request, slug=None):
+        form = get_object_or_404(Form, slug=slug)
+        serializer = SubmitSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        answers = serializer.validated_data.get("answers")
+        answer_list = []
+        submit = Submit.objects.create(form=form, form_title=form.title, user=request.user)
+        for answer in answers:
+            answer_list.append(
+                Answer(
+                    submit=submit,
+                    component=answer.get("component"),
+                    question_title=answer.get("component").title if answer.get("component") else "",
+                    answer=answer.get("answer") if answer.get("answer") else "",
+                    choice=answer.get("choice"),
+                    choice_text=answer.get("choice").text if answer.get("choice") else "",
+                )
+            )
+        Answer.objects.bulk_create(answer_list)
+        return Response(status=status.HTTP_201_CREATED)
 
 
 class ComponentViewSet(
