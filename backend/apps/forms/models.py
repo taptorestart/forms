@@ -40,7 +40,7 @@ class Component(models.Model):
     QUESTION_TYPES = (TEXT, TEXTAREA, RADIO, CHECKBOX, SELECT)
     QUESTION_SELECT_TYPES = (RADIO, CHECKBOX, SELECT)
 
-    form = models.ForeignKey(Form, related_name="+", on_delete=models.CASCADE, db_comment="form FK")
+    form = models.ForeignKey(Form, on_delete=models.CASCADE, db_comment="form FK")
     type = models.SmallIntegerField(verbose_name=_("type"), choices=TYPE_CHOICES, db_comment="type")
     max_allowed_size = models.SmallIntegerField(
         verbose_name=_("max allowed size"), null=True, blank=True, db_comment="max allowed size"
@@ -73,7 +73,7 @@ class Component(models.Model):
 
 
 class Choice(models.Model):
-    component = models.ForeignKey(Component, related_name="+", on_delete=models.CASCADE, db_comment="question FK")
+    component = models.ForeignKey(Component, on_delete=models.CASCADE, db_comment="question FK")
     text = models.CharField(verbose_name=_("text"), max_length=255, db_comment="title")
     order = models.SmallIntegerField(verbose_name=_("order"), default=0, db_comment="order")
     updated_by = models.ForeignKey(
@@ -108,9 +108,7 @@ class Submit(models.Model):
 
 
 class Answer(models.Model):
-    submit = models.ForeignKey(
-        Submit, verbose_name=_("submit"), related_name="+", on_delete=models.CASCADE, db_comment="submit FK"
-    )
+    submit = models.ForeignKey(Submit, verbose_name=_("submit"), on_delete=models.CASCADE, db_comment="submit FK")
     component = models.ForeignKey(
         Component, verbose_name=_("component"), related_name="+", on_delete=models.DO_NOTHING, db_comment="component FK"
     )

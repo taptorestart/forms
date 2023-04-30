@@ -3,30 +3,28 @@ from rest_framework import serializers
 from apps.forms.models import Form, Component, Choice, Submit, Answer
 
 
+class ChoiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Choice
+        fields = ["id", "component", "text", "order"]
+
+
 class ComponentSerializer(serializers.ModelSerializer):
+    choices = ChoiceSerializer(source="choice_set", many=True, required=False)
+
     class Meta:
         model = Component
-        fields = ["id", "form", "type", "title", "description", "order"]
+        fields = ["id", "form", "type", "title", "description", "order", "choices"]
+        read_only_fields = ["choices"]
 
 
 class FormSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Form
-        fields = ["id", "slug", "title", "start_date", "end_date"]
-
-
-class FormRetrieveSerializer(serializers.ModelSerializer):
-    components = ComponentSerializer(many=True, allow_null=True)
+    components = ComponentSerializer(source="component_set", many=True, required=False)
 
     class Meta:
         model = Form
         fields = ["id", "slug", "title", "start_date", "end_date", "components"]
-
-
-class ChoiceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Choice
-        fields = ["id", "component", "text"]
+        read_only_fields = ["components"]
 
 
 class AnswerSerializer(serializers.ModelSerializer):

@@ -1,6 +1,7 @@
 from django.contrib import admin
+from django.utils.safestring import mark_safe
 
-from apps.forms.models import Form, Component, Choice
+from apps.forms.models import Form, Component, Choice, Submit
 
 
 @admin.register(Form)
@@ -91,3 +92,30 @@ class ChoiceAdmin(admin.ModelAdmin):
             order_list = Choice.objects.filter(component_id=obj.component_id).values_list("order", flat=True)
             obj.order = max(order_list) + 1 if order_list else 1
         super().save_model(request, obj, form, change)
+
+
+@admin.register(Submit)
+class SubmitAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "form_slug",
+        "form_title",
+        "user",
+        "answer",
+    )
+
+    def form_slug(self, obj: Submit) -> str:
+        return obj.form.slug
+
+    def answer(self, obj: Submit) -> str:
+        answers = obj.answer_set.all()
+        answer_html = ""
+        for i, answer in enumerate(answers):
+            answer_html += f"Q. {answer.question_title}<br>"
+            if answer.component.type in Component.QUESTION_SELECT_TYPES:
+                answer_html += f"A. {answer.choice_text}"
+            else:
+                answer_html += f"A. {answer.answer}"
+            if i != len(answers) - 1:
+                answer_html += "<br>"
+        return mark_safe(answer_html)

@@ -1,4 +1,4 @@
-from django.utils import timezone
+from django.contrib.auth.models import AnonymousUser
 from rest_framework import permissions, mixins, status
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
@@ -6,7 +6,6 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from apis.v1.forms.serializers import (
-    FormRetrieveSerializer,
     FormSerializer,
     ComponentSerializer,
     ChoiceSerializer,
@@ -23,24 +22,18 @@ class FormViewSet(
     mixins.DestroyModelMixin,
     GenericViewSet,
 ):
-    queryset = Form.objects.all()
+    queryset = Form.objects.all().prefetch_related("component_set", "component_set__choice_set")
     permission_classes = [permissions.IsAdminUser]
     http_method_names = ["post", "get", "patch", "delete"]
     lookup_field = "slug"
 
-    def get_queryset(self):
-        now = timezone.now()
-        return Form.objects.filter(start_date__lte=now, end_date__gte=now)
-
     def get_serializer_class(self):
-        if self.action == "retrieve":
-            return FormRetrieveSerializer
         if self.action == "submit":
             return SubmitSerializer
         return FormSerializer
 
     def get_permissions(self):
-        if self.action in ["list", "retrieve"]:
+        if self.action in ["list", "retrieve", "submit"]:
             return (permissions.AllowAny(),)
         return (permissions.IsAdminUser(),)
 
@@ -51,7 +44,8 @@ class FormViewSet(
         serializer.is_valid(raise_exception=True)
         answers = serializer.validated_data.get("answers")
         answer_list = []
-        submit = Submit.objects.create(form=form, form_title=form.title, user=request.user)
+        user = None if type(request.user) == AnonymousUser else request.user
+        submit = Submit.objects.create(form=form, form_title=form.title, user=user)
         for answer in answers:
             answer_list.append(
                 Answer(
@@ -75,7 +69,7 @@ class ComponentViewSet(
     mixins.DestroyModelMixin,
     GenericViewSet,
 ):
-    queryset = Component.objects.all()
+    queryset = Component.objects.all().prefetch_related("choice_set")
     serializer_class = ComponentSerializer
     permission_classes = [permissions.IsAdminUser]
     http_method_names = ["post", "get", "patch", "delete"]
