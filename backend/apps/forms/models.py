@@ -38,6 +38,7 @@ class Component(models.Model):
         (SELECT, "SELECT"),
     )
     QUESTION_TYPES = (TEXT, TEXTAREA, RADIO, CHECKBOX, SELECT)
+    QUESTION_TEXT_TYPES = (TEXT, TEXTAREA)
     QUESTION_SELECT_TYPES = (RADIO, CHECKBOX, SELECT)
 
     form = models.ForeignKey(Form, on_delete=models.CASCADE, db_comment="form FK")
@@ -47,6 +48,7 @@ class Component(models.Model):
     )
     title = models.CharField(verbose_name=_("title"), blank=True, max_length=255, db_comment="title")
     description = models.CharField(verbose_name=_("description"), blank=True, max_length=500, db_comment="description")
+    is_required = models.BooleanField(verbose_name=_("is required"), default=False, db_comment="is required")
     order = models.SmallIntegerField(verbose_name=_("order"), default=0, db_comment="order")
     updated_by = models.ForeignKey(
         User,
@@ -68,6 +70,20 @@ class Component(models.Model):
     def is_question(self) -> bool:
         result = False
         if self.type in self.QUESTION_TYPES:
+            result = True
+        return result
+
+    @property
+    def is_text_question(self) -> bool:
+        result = False
+        if self.type in self.QUESTION_TEXT_TYPES:
+            result = True
+        return result
+
+    @property
+    def is_select_question(self) -> bool:
+        result = False
+        if self.type in self.QUESTION_SELECT_TYPES:
             result = True
         return result
 

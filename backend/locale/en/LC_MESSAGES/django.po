@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-26 06:32+0000\n"
+"POT-Creation-Date: 2023-04-30 23:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "slug"
 msgstr "slug"
 
-#: apps/forms/models.py:8 apps/forms/models.py:46
+#: apps/forms/models.py:8 apps/forms/models.py:49
 msgid "title"
 msgstr "title"
 
@@ -34,16 +34,16 @@ msgstr "start date"
 msgid "end date"
 msgstr "end date"
 
-#: apps/forms/models.py:13 apps/forms/models.py:53 apps/forms/models.py:81
+#: apps/forms/models.py:13 apps/forms/models.py:55 apps/forms/models.py:83
 msgid "updated by"
 msgstr "updated by"
 
-#: apps/forms/models.py:19 apps/forms/models.py:59 apps/forms/models.py:87
-#: apps/forms/models.py:102 apps/forms/models.py:131
+#: apps/forms/models.py:19 apps/forms/models.py:61 apps/forms/models.py:89
+#: apps/forms/models.py:104 apps/forms/models.py:131
 msgid "created at"
 msgstr "created at"
 
-#: apps/forms/models.py:20 apps/forms/models.py:60 apps/forms/models.py:88
+#: apps/forms/models.py:20 apps/forms/models.py:62 apps/forms/models.py:90
 msgid "updated at"
 msgstr "updated at"
 
@@ -55,55 +55,59 @@ msgstr "form"
 msgid "forms"
 msgstr "forms"
 
-#: apps/forms/models.py:42
+#: apps/forms/models.py:45
 msgid "type"
 msgstr "type"
 
-#: apps/forms/models.py:44
+#: apps/forms/models.py:47
 msgid "max allowed size"
 msgstr "max allowed size"
 
-#: apps/forms/models.py:48
+#: apps/forms/models.py:50
 msgid "description"
 msgstr "description"
 
-#: apps/forms/models.py:50 apps/forms/models.py:78
+#: apps/forms/models.py:51
+msgid "is required"
+msgstr "is required"
+
+#: apps/forms/models.py:52 apps/forms/models.py:80
 msgid "order"
 msgstr "order"
 
-#: apps/forms/models.py:64 apps/forms/models.py:115
+#: apps/forms/models.py:66 apps/forms/models.py:115
 msgid "component"
 msgstr "component"
 
-#: apps/forms/models.py:65
+#: apps/forms/models.py:67
 msgid "components"
 msgstr "components"
 
-#: apps/forms/models.py:77
+#: apps/forms/models.py:79
 msgid "text"
 msgstr "text"
 
-#: apps/forms/models.py:92 apps/forms/models.py:123
+#: apps/forms/models.py:94 apps/forms/models.py:123
 msgid "choice"
 msgstr "choice"
 
-#: apps/forms/models.py:93
+#: apps/forms/models.py:95
 msgid "choices"
 msgstr "choices"
 
-#: apps/forms/models.py:98
+#: apps/forms/models.py:100
 msgid "form title"
 msgstr "form title"
 
-#: apps/forms/models.py:100
+#: apps/forms/models.py:102
 msgid "user"
 msgstr "user"
 
-#: apps/forms/models.py:106 apps/forms/models.py:112
+#: apps/forms/models.py:108 apps/forms/models.py:113
 msgid "submit"
 msgstr "submit"
 
-#: apps/forms/models.py:107
+#: apps/forms/models.py:109
 msgid "submits"
 msgstr "submits"
 
