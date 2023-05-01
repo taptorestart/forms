@@ -1,0 +1,45 @@
+name: Run tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    services:
+      mysql:
+        image: mysql
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      working-directory: backend
+      run: |
+        sudo apt install libcurl4-openssl-dev libssl-dev mysql-client
+        python -m pip install --upgrade pip
+        python -m pip install -r requirements.txt
+        python -m pip install -r requirements-test.txt
+
+    - name: Run tests
+      working-directory: backend
+      run: |
+        export DB_NAME=form
+        export DB_USER=root
+        export DB_PASSWORD=''
+        export DB_HOST=127.0.0.1
+        export DB_PORT=3306
+        pytest -c pytest.ini
