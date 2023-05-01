@@ -1,10 +1,29 @@
 from django.contrib.auth.models import AnonymousUser
+from drf_spectacular.utils import extend_schema_view
 from rest_framework import permissions, mixins, status
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
+from apis.v1.forms.schemas import (
+    SCHEMA_FORM_LIST,
+    SCHEMA_FORM_CREATE,
+    SCHEMA_FORM_RETRIEVE,
+    SCHEMA_FORM_PARTIAL_UPDATE,
+    SCHEMA_FORM_DESTROY,
+    SCHEMA_FORM_SUBMIT,
+    SCHEMA_COMPONENT_LIST,
+    SCHEMA_COMPONENT_CREATE,
+    SCHEMA_COMPONENT_RETRIEVE,
+    SCHEMA_COMPONENT_PARTIAL_UPDATE,
+    SCHEMA_COMPONENT_DESTROY,
+    SCHEMA_CHOICE_LIST,
+    SCHEMA_CHOICE_CREATE,
+    SCHEMA_CHOICE_RETRIEVE,
+    SCHEMA_CHOICE_PARTIAL_UPDATE,
+    SCHEMA_CHOICE_DESTROY,
+)
 from apis.v1.forms.serializers import (
     FormSerializer,
     ComponentSerializer,
@@ -14,6 +33,14 @@ from apis.v1.forms.serializers import (
 from apps.forms.models import Form, Component, Choice, Answer, Submit
 
 
+@extend_schema_view(
+    list=SCHEMA_FORM_LIST,
+    create=SCHEMA_FORM_CREATE,
+    retrieve=SCHEMA_FORM_RETRIEVE,
+    partial_update=SCHEMA_FORM_PARTIAL_UPDATE,
+    destroy=SCHEMA_FORM_DESTROY,
+    submit=SCHEMA_FORM_SUBMIT,
+)
 class FormViewSet(
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
@@ -61,6 +88,13 @@ class FormViewSet(
         return Response(status=status.HTTP_201_CREATED)
 
 
+@extend_schema_view(
+    list=SCHEMA_COMPONENT_LIST,
+    create=SCHEMA_COMPONENT_CREATE,
+    retrieve=SCHEMA_COMPONENT_RETRIEVE,
+    partial_update=SCHEMA_COMPONENT_PARTIAL_UPDATE,
+    destroy=SCHEMA_COMPONENT_DESTROY,
+)
 class ComponentViewSet(
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
@@ -78,6 +112,13 @@ class ComponentViewSet(
         return Component.objects.filter(form__slug=self.kwargs.get("form_slug"))
 
 
+@extend_schema_view(
+    list=SCHEMA_CHOICE_LIST,
+    create=SCHEMA_CHOICE_CREATE,
+    retrieve=SCHEMA_CHOICE_RETRIEVE,
+    partial_update=SCHEMA_CHOICE_PARTIAL_UPDATE,
+    destroy=SCHEMA_CHOICE_DESTROY,
+)
 class ChoiceViewSet(
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
