@@ -40,6 +40,7 @@ class Component(models.Model):
     QUESTION_TYPES = (TEXT, TEXTAREA, RADIO, CHECKBOX, SELECT)
     QUESTION_TEXT_TYPES = (TEXT, TEXTAREA)
     QUESTION_SELECT_TYPES = (RADIO, CHECKBOX, SELECT)
+    QUESTION_SELECT_ONE_TYPES = (RADIO, SELECT)
 
     form = models.ForeignKey(Form, on_delete=models.CASCADE, db_comment="form FK")
     type = models.SmallIntegerField(verbose_name=_("type"), choices=TYPE_CHOICES, db_comment="type")
@@ -84,6 +85,13 @@ class Component(models.Model):
     def is_select_question(self) -> bool:
         result = False
         if self.type in self.QUESTION_SELECT_TYPES:
+            result = True
+        return result
+
+    @property
+    def is_select_one_question(self) -> bool:
+        result = False
+        if self.type in self.QUESTION_SELECT_ONE_TYPES:
             result = True
         return result
 

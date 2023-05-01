@@ -32,6 +32,18 @@ def component_radio(form):
 
 
 @pytest.fixture()
+def component_select(form):
+    component: Component = ComponentFactory(form=form, type=Component.SELECT, is_required=True)
+    return component
+
+
+@pytest.fixture()
+def component_checkbox(form):
+    component: Component = ComponentFactory(form=form, type=Component.CHECKBOX, is_required=True)
+    return component
+
+
+@pytest.fixture()
 def component_text(form):
     component: Component = ComponentFactory(form=form, type=Component.TEXT, is_required=True)
     return component

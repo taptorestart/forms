@@ -27,6 +27,13 @@ class FormSerializer(serializers.ModelSerializer):
         fields = ["id", "slug", "title", "start_date", "end_date", "components"]
         read_only_fields = ["components"]
 
+    def validate(self, attrs):
+        start_date = attrs.get("start_date")
+        end_date = attrs.get("end_date")
+        if start_date and end_date and end_date < start_date:
+            raise ValidationError({"end_date": ["The end date cannot be earlier than the start date."]})
+        return attrs
+
 
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,10 +51,16 @@ class SubmitSerializer(serializers.ModelSerializer):
         read_only_fields = ["form_title", "user"]
 
     def validate_answers(self, value):
+        component_to_choice = {}
         for data in value:
             component: Component = data.get("component")
             answer = data.get("answer")
             choice: Choice = data.get("choice")
+            if component.is_select_one_question and component_to_choice.get(component.id):
+                raise ValidationError({"component": ["Select only one choice."]})
+            if component.is_select_one_question and not component_to_choice.get(component.id) and choice:
+                component_to_choice[component.id] = choice.id
+
             if component.is_text_question and component.is_required and answer is None:
                 raise ValidationError({"answer": ["This field may not be blank."]})
             if component.is_select_question and component.is_required and choice is None:
