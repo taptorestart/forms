@@ -1,7 +1,13 @@
+from celery.result import AsyncResult
 from django.contrib import admin
+from django.http import Http404, JsonResponse, FileResponse
+from django.urls import path
 from django.utils.safestring import mark_safe
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework import status
 
 from apps.forms.models import Form, Component, Choice, Submit
+from apps.forms.tasks import download_xlsx
 
 
 @admin.register(Form)
@@ -103,6 +109,9 @@ class SubmitAdmin(admin.ModelAdmin):
         "user",
         "answer",
     )
+    list_filter = ("form__slug",)
+
+    change_list_template = "list.html"
 
     def form_slug(self, obj: Submit) -> str:
         return obj.form.slug
@@ -119,3 +128,37 @@ class SubmitAdmin(admin.ModelAdmin):
             if i != len(answers) - 1:
                 answer_html += "<br>"
         return mark_safe(answer_html)
+
+    def get_urls(self):
+        urls = [
+            path("download/", self.download, name="download"),
+            path("download-file/", self.download_file, name="download_file"),
+        ]
+        return urls + super().get_urls()
+
+    @csrf_exempt
+    def download(self, request):
+        if not request.user.is_staff:
+            raise Http404()
+        if request.method == "POST":
+            slug = request.GET.get("form__slug")
+            task = download_xlsx.delay(slug)
+            return JsonResponse({"task": task.id}, status=status.HTTP_202_ACCEPTED)
+        if request.method == "GET":
+            task = request.GET.get("task")
+            task_result = AsyncResult(task)
+            payload = {
+                "task": task,
+                "status": task_result.status,
+                "result": task_result.result,
+            }
+            return JsonResponse(payload, status=status.HTTP_200_OK)
+
+    def download_file(self, request):
+        if not request.user.is_staff:
+            raise Http404()
+        filename = request.GET.get("filename")
+        filepath = f"/tmp/forms/{filename}"
+        response = FileResponse(open(filepath, "rb"))
+        response["Content-Disposition"] = f"attachment; filename={filename}"
+        return response

@@ -1,0 +1,44 @@
+{% extends 'admin/change_list.html' %}
+{% block object-tools-items %}
+    <script>
+        let httpRequest = new XMLHttpRequest();
+        const getTask = function(){
+            const queryParams = window.location.search.slice(1);
+            if(queryParams.length === 0){
+                alert('Please select slug.')
+            }else{
+                httpRequest.onreadystatechange = getResponse;
+                httpRequest.open('POST', 'download/?' + queryParams);
+                httpRequest.send();
+                function getResponse() {
+                    if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                        const task = JSON.parse(httpRequest.responseText).task;
+                        checkStatus(task);
+                    }
+                }
+            }
+        }
+        const checkStatus = function(task){
+            httpRequest.onreadystatechange = getResponse;
+            httpRequest.open('GET', 'download/?task=' + task);
+            httpRequest.send();
+            function getResponse() {
+                if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                    const res = JSON.parse(httpRequest.responseText);
+                    if(res.status === 'SUCCESS'){
+                        download(res.result);
+                    }else{
+                        setTimeout(() => {
+                          checkStatus(res.task);
+                        }, 1000);
+                    }
+                }
+            }
+        }
+        const download = function(filename){
+            window.location.href = '/admin/forms/submit/download-file/?filename=' + filename;
+        }
+    </script>
+    <li><a href='#' onclick='getTask();'>Download</a></li>
+     {{ block.super }}
+{% endblock %}
