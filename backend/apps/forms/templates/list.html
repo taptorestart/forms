@@ -8,7 +8,7 @@
                 alert('Please select slug.')
             }else{
                 httpRequest.onreadystatechange = getResponse;
-                httpRequest.open('POST', 'download/?' + queryParams);
+                httpRequest.open('GET', 'download/?' + queryParams);
                 httpRequest.send();
                 function getResponse() {
                     if (httpRequest.readyState === XMLHttpRequest.DONE) {
@@ -20,7 +20,7 @@
         }
         const checkStatus = function(task){
             httpRequest.onreadystatechange = getResponse;
-            httpRequest.open('GET', 'download/?task=' + task);
+            httpRequest.open('GET', 'download-status/?task=' + task);
             httpRequest.send();
             function getResponse() {
                 if (httpRequest.readyState === XMLHttpRequest.DONE) {
