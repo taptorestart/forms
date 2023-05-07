@@ -5,12 +5,12 @@ This is a simple form application built using Django and Django Rest Framework(D
 
 ### Install
 1. Clone the repository:
-```
+```shell
 $ git clone https://github.com/taptorestart/forms.git
 ```
 
 2. Install dependencies:
-```
+```shell
 $ cd backend
 $ python -m venv venv
 $ source ./venv/bin/activate
@@ -19,12 +19,12 @@ $ pip install -r requirements.txt
 
 ### Run
 1. Run the migrations:
-```
+```shell
 $ python manage.py migrate
 ```
 
 2. Create superuser:
-```
+```shell
 $ python manage.py createsuperuser
 ```
 
@@ -38,12 +38,19 @@ DB_USER=YOUR_DB_USER
 DB_PASSWORD=YOUR_DB_PASSWORD
 DB_HOST=YOUR_DB_HOST
 DB_PORT=YOUR_DB_PORT
+REDIS_HOST=YOUR_REDIS_HOST
+REDIS_PORT=YOUR_REDIS_PORT
 ```
 
 4. Run
 
-```
+```shell
 $ python manage.py runserver
+```
+
+Run celery on the other terminal window.
+```shell
+$ celery -A config worker -l info
 ```
 
 /swagger-ui/

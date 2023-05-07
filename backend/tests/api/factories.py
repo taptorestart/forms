@@ -2,7 +2,7 @@ import factory
 from django.contrib.auth.models import User
 from factory import SubFactory
 
-from apps.forms.models import Form, Component, Choice, Answer
+from apps.forms.models import Form, Component, Choice, Answer, Submit
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -34,3 +34,8 @@ class AnswerFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = Answer
+
+
+class SubmitFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Submit
