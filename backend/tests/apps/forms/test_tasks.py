@@ -1,22 +1,30 @@
 import datetime
+from datetime import datetime, time
 
 import pytest
+from dateutil.relativedelta import relativedelta
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 from apps.forms.models import Component
 from apps.forms.tasks import get_dataframe
-from tests.api.factories import ComponentFactory, SubmitFactory, AnswerFactory, ChoiceFactory, UserFactory
+from tests.apis.factories import ComponentFactory
+from tests.apis.factories import FormFactory
+from tests.apis.factories import SubmitFactory, AnswerFactory, ChoiceFactory, UserFactory
 
 
 @pytest.mark.django_db
-def test_get_dataframe(form):
+def test_get_dataframe():
+    start_date = datetime.combine(timezone.now().replace(day=1), time.min)
+    end_date = datetime.combine(timezone.now().replace(day=1) + relativedelta(months=1), time.max)
+    form = FormFactory(slug="test", title="Form test", start_date=start_date, end_date=end_date)
     user_staff: User = UserFactory(username="staff", is_staff=True)
     ComponentFactory(form=form, type=Component.TITLE, title="title", order=1)
     component_text = ComponentFactory(form=form, type=Component.TEXT, title="text", order=3)
     component_select = ComponentFactory(form=form, type=Component.SELECT, title="select", order=2)
     choice1 = ChoiceFactory(component=component_select, text="1.")
     choice2 = ChoiceFactory(component=component_select, text="2.")
-    created_at = datetime.datetime(year=2023, month=5, day=1)
+    created_at = datetime(year=2023, month=5, day=1)
     submit = SubmitFactory(user=user_staff, form=form)
     submit.created_at = created_at
     submit.save()
