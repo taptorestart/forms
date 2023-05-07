@@ -3,12 +3,16 @@ name: Run tests
 on:
   pull_request:
     types:
+      - opened
+      - synchronize
       - ready_for_review
+      - review_requested
     branches:
       - main
 
 jobs:
-  build:
+  test:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-20.04
     services:
       mysql:
