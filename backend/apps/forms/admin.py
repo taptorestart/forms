@@ -141,7 +141,6 @@ class SubmitAdmin(admin.ModelAdmin):
             raise Http404()
         slug = request.GET.get("form__slug")
         task = download_xlsx.delay(slug)
-        # task = download_xlsx(slug)
         return JsonResponse({"task": task.id}, status=status.HTTP_202_ACCEPTED)
 
     def download_status(self, request):
