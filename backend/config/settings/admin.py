@@ -5,7 +5,10 @@ load_dotenv()
 
 ROOT_URLCONF = "config.urls.admin"
 
-INSTALLED_APPS += []
+INSTALLED_APPS += [
+    "unfold",  # Django Admin Theme before django.contrib.admin
+    "django.contrib.admin",
+]
 
 REDIS_HOST = os.environ.get("REDIS_HOST")
 REDIS_PORT = os.environ.get("REDIS_PORT")
