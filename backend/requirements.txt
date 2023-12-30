@@ -4,6 +4,7 @@ djangorestframework==3.14.0
 drf-nested-routers==0.93.4
 drf-spectacular==0.26.2
 mysqlclient==2.1.1
+django-unfold==0.16.0  # Django Admin Theme
 
 # celery
 celery==5.2.7
