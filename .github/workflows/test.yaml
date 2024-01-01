@@ -49,8 +49,8 @@ jobs:
       working-directory: backend
       run: |
         export DB_NAME=form
-        export DB_USER=root
-        export DB_PASSWORD=''
+        export DB_USER=postgres
+        export DB_PASSWORD=password
         export DB_HOST=127.0.0.1
         export DB_PORT=3306
         pytest -c pytest.ini
