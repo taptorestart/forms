@@ -36,7 +36,7 @@ DATA_TYPES = {
 }
 
 
-@given(parsers.parse("I am a/an {user_type} user."), target_fixture="user")
+@given(parsers.parse("I am a {user_type} user."), target_fixture="user")
 def i_am_a_user_type_user(user_type):
     if user_type == "anonymous":
         return None
@@ -47,16 +47,16 @@ def i_am_a_user_type_user(user_type):
     return UserFactory(is_staff=False, is_superuser=False)
 
 
-@given(parsers.parse("I am logging in."), target_fixture="client")
-def i_am_logging_in(user):
+@given(parsers.parse("I am logged in."), target_fixture="client")
+def i_am_logged_in(user):
     client: APIClient = APIClient()
     if user:
         client.force_authenticate(user=user)
     return client
 
 
-@when(parsers.parse("I am making a request to the server using the {method} and {path}."), target_fixture="response")
-def i_am_making_a_request_to_the_server_using_the_method_and_path(client, method, path):
+@when(parsers.parse("I am making a {method} request to {path}."), target_fixture="response")
+def i_am_making_a_method_request_to_path(client, method, path):
     response = None
     if method in ["GET", "get"]:
         response = client.get(path=path)
@@ -72,18 +72,18 @@ def i_am_making_a_request_to_the_server_using_the_method_and_path(client, method
 
 
 @given(
-    parsers.parse("The data to be sent is as follows.\n{payload}"),
+    parsers.parse("The following data will be sent.\n{data}"),
     target_fixture="data",
 )
-def the_data_to_be_sent_is_as_follows(payload):
-    return json.loads(payload)
+def the_following_data_will_be_sent(data):
+    return json.loads(data)
 
 
 @when(
-    parsers.parse("I am making a request to the server with data using the {method} and {path}."),
+    parsers.parse("I am sending a {method} request to {path} with data."),
     target_fixture="response",
 )
-def i_am_making_a_request_to_the_server_with_data_using_the_method_and_path(client, method, path, data):
+def i_am_sending_a_method_request_to_path_with_data(client, method, path, data):
     response = None
     if method in ["GET", "get"]:
         response = client.get(path=path, data=data)
@@ -99,9 +99,9 @@ def i_am_making_a_request_to_the_server_with_data_using_the_method_and_path(clie
 
 
 @given(
-    parsers.parse("I will save the following data using {module}'s {factory_class_name}.\n{data}"),
+    parsers.parse("I will save the following data using {factory_class_name} from {module}.\n{data}"),
 )
-def i_will_save_the_following_data_using_modules_factory_class_name(module: str, factory_class_name: str, data):
+def i_will_save_the_following_data_using_factory_class_name_from_module(module: str, factory_class_name: str, data):
     module = importlib.import_module(module)
     factory_class = getattr(module, factory_class_name)
     factory_class(**json.loads(data))
@@ -113,8 +113,8 @@ def the_response_status_code_is_status_code(response, status_code):
     assert response.status_code == status_code
 
 
-@then(parsers.parse("The number of result in the response JSON is {number:d}."))
-def the_number_of_result_in_the_response_json_is_number(response, number):
+@then(parsers.parse("The number of results in the response JSON is {number:d}."))
+def the_number_of_results_in_the_response_json_is_number(response, number):
     assert len(response.json()) == number
 
 
@@ -132,30 +132,24 @@ def the_field_data_in_the_response_json_is_of_type_data_type_and_is_the_same_as_
     assert str(data) == value
 
 
-@then(
-    parsers.parse(
-        "The {field} data in the {index:d}st/nd/rd/th entry of the response JSON list is the same as {value}."
-    )
-)
-def the_field_data_in_the_indexstndrdth_entry_of_the_response_json_list_is_the_same_as_value(
-    response, field, index, value
-):
+@then(parsers.parse("The {field} data in the {index:d}th entry of the response JSON list is the same as {value}."))
+def the_field_data_in_the_index_th_entry_of_the_response_json_list_is_the_same_as_value(response, field, index, value):
     assert str(response.json()[int(index) - 1][field]) == value
 
 
 @then(
     parsers.parse(
-        "The {field} data in the {index:d}st/nd/rd/th entry of the response JSON list is of type {data_type} and the same as {value}."
+        "The {field} data in the {index:d}th entry of the response JSON list is of type {data_type} and the same as {value}."
     )
 )
-def the_field_data_in_the_indexstndrdth_entry_of_the_response_json_results_list_is_of_type_data_type_and_the_same_as_value(
+def the_field_data_in_the_index_th_entry_of_the_response_json_results_list_is_of_type_data_type_and_the_same_as_value(
     response, field, index, value
 ):
     assert str(response.json()[int(index) - 1][field]) == value
 
 
-@then(parsers.parse("The existence of data with an ID of {pk:d} in the {model} model from {module} is {existance}."))
-def the_existence_of_data_with_an_id_of_pk_in_the_model_model_from_module_is_existance(pk, model, module, existance):
+@then(parsers.parse("It is {existance} that a record with an ID of {pk:d} exists in the {model} model from {module}."))
+def it_is_existance_that_a_record_with_an_id_of_pk_exists_in_the_model_model_from_module(pk, model, module, existance):
     module = importlib.import_module(module)
     model_class = getattr(module, model)
     obj = model_class.objects.filter(pk=pk).last()
@@ -164,10 +158,10 @@ def the_existence_of_data_with_an_id_of_pk_in_the_model_model_from_module_is_exi
 
 @then(
     parsers.parse(
-        "The {field} data of the {model} model from {module} with an ID of {pk:d} is of type {data_type} and the same as {value}."
+        "The {field} field of the {model} model from {module} with an ID of {pk:d} is of type {data_type} and equals {value}."
     )
 )
-def the_field_data_of_the_model_model_from_module_with_an_id_of_pk_is_of_type_data_type_and_the_same_as_value(
+def the_field_field_of_the_model_model_from_module_with_an_id_of_pk_is_of_type_data_type_and_equals_value(
     field, model, module, pk, data_type, value
 ):
     module = importlib.import_module(module)
