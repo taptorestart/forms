@@ -1,27 +1,27 @@
 @django_db
 Feature: Form Update Test
   Background:
-    Given I will save the following data using backend.tests.apis.factories's FormFactory.
+    Given I will save the following data using FormFactory from backend.tests.apis.factories.
           """
           {
-            "id": 1,
+            "id": 101,
             "slug": "test",
             "title": "test",
             "start_date": "2023-12-01",
             "end_date": "2023-12-31"
           }
           """
-    And The data to be sent is as follows.
+
+  Scenario Outline: Form Partial Update Permission Test
+    Given I am a <user_type> user.
+    And I am logged in.
+    And The following data will be sent.
         """
         {
           "title": "test1"
         }
         """
-
-  Scenario Outline: Form Partial Update Permission Test
-    Given I am a/an <user_type> user.
-    And I am logging in.
-    When I am making a request to the server with data using the PATCH and /v1/forms/test/.
+    When I am sending a PATCH request to /v1/forms/test/ with data.
     Then The response status code is <status_code>.
   Examples:
     | user_type | status_code |
@@ -31,11 +31,17 @@ Feature: Form Update Test
 
 
   Scenario: Form Partial Update Test
-    Given I am a/an staff user.
-    And I am logging in.
-    When I am making a request to the server with data using the PATCH and /v1/forms/test/.
+    Given I am a staff user.
+    And I am logged in.
+    And The following data will be sent.
+        """
+        {
+          "title": "test2"
+        }
+        """
+    When I am sending a PATCH request to /v1/forms/test/ with data.
     Then The response status code is 200.
-    And The id data in the response JSON is the same as 1.
-    And The title data in the response JSON is the same as test1.
-    And The existence of data with an ID of 1 in the Form model from apps.forms.models is True.
-    And The title data of the Form model from apps.forms.models with an ID of 1 is of type str and the same as test1.
+    And The id data in the response JSON is the same as 101.
+    And The title data in the response JSON is the same as test2.
+    And It is True that a record with an ID of 101 exists in the Form model from apps.forms.models.
+    And The title field of the Form model from apps.forms.models with an ID of 101 is of type str and equals test2.
