@@ -9,6 +9,7 @@ on:
       - review_requested
     branches:
       - main
+      - develop
 
 jobs:
   test:
