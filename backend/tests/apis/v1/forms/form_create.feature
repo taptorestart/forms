@@ -1,7 +1,9 @@
 @django_db
 Feature: Form Create Test
-  Background:
-    Given The data to be sent is as follows.
+  Scenario Outline: Form Create Permission Test
+    Given I am a <user_type> user.
+    And I am logged in.
+    And The following data will be sent:
         """
         {
           "slug": "test",
@@ -10,11 +12,7 @@ Feature: Form Create Test
           "end_date": "2023-12-31"
         }
         """
-
-  Scenario Outline: Form Create Permission Test
-    Given I am a/an <user_type> user.
-    And I am logging in.
-    When I am making a request to the server with data using the POST and /v1/forms/.
+    When I am sending a POST request to /v1/forms/ with data.
     Then The response status code is <status_code>.
   Examples:
     | user_type | status_code |
@@ -23,9 +21,18 @@ Feature: Form Create Test
     | staff | 201 |
 
   Scenario: Form Create Test
-    Given I am a/an staff user.
-    And I am logging in.
-    When I am making a request to the server with data using the POST and /v1/forms/.
+    Given I am a staff user.
+    And I am logged in.
+    And The following data will be sent:
+        """
+        {
+          "slug": "test",
+          "title": "test",
+          "start_date": "2023-12-01",
+          "end_date": "2023-12-31"
+        }
+        """
+    When I am sending a POST request to /v1/forms/ with data.
     Then The response status code is 201.
     And The slug data in the response JSON is the same as test.
     And The title data in the response JSON is of type str and the same as test.

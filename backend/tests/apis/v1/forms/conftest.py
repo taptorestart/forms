@@ -5,8 +5,8 @@ from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
 from apps.forms.models import Component
-from tests.apis.factories import ComponentFactory
-from tests.apis.factories import FormFactory
+from tests.factories import ComponentFactory
+from tests.factories import FormFactory
 
 
 @pytest.fixture

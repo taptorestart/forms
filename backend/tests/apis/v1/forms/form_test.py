@@ -21,12 +21,12 @@ def test_form_create_test():
     pass
 
 
-@scenario("form_update.feature", "Form Partial Update Permission Test")
+@scenario("form_partial_update.feature", "Form Partial Update Permission Test")
 def test_form_partial_update_permission_test():
     pass
 
 
-@scenario("form_update.feature", "Form Partial Update Test")
+@scenario("form_partial_update.feature", "Form Partial Update Test")
 def test_form_partial_update_test():
     pass
 
