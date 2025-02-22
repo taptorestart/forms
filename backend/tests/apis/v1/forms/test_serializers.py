@@ -3,8 +3,8 @@ import pytest
 from apis.v1.forms.serializers import SubmitSerializer, FormSerializer
 from apps.forms.models import Choice
 from apps.forms.models import Component
-from tests.apis.factories import ChoiceFactory
-from tests.apis.factories import ComponentFactory
+from tests.factories import ChoiceFactory
+from tests.factories import ComponentFactory
 
 
 class TestFormSerializer:
