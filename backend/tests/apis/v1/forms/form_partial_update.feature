@@ -1,7 +1,7 @@
 @django_db
 Feature: Form Partial Update Test
   Background:
-    Given I will save the following data using Form model.
+    Given I will save the following data using Form model:
           """
           {
             "id": 101,
@@ -15,7 +15,7 @@ Feature: Form Partial Update Test
   Scenario Outline: Form Partial Update Permission Test
     Given I am a <user_type> user.
     And I am logged in.
-    And The following data will be sent.
+    And The following data will be sent:
         """
         {
           "title": "test1"
@@ -33,7 +33,7 @@ Feature: Form Partial Update Test
   Scenario: Form Partial Update Test
     Given I am a staff user.
     And I am logged in.
-    And The following data will be sent.
+    And The following data will be sent:
         """
         {
           "title": "test2"
