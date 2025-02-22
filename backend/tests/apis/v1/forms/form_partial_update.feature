@@ -41,6 +41,24 @@ Feature: Form Partial Update Test
         """
     When I am sending a PATCH request to /v1/forms/test/ with data.
     Then The response status code is 200.
+    And The response JSON should equal:
+        """
+        {
+            "id": 101,
+            "slug": "test",
+            "start_date": "2023-12-01T00:00:00Z",
+            "end_date": "2023-12-31T00:00:00Z",
+            "title": "test2",
+            "components": []
+        }
+        """
+    And The response JSON should contain the following key-value pairs:
+        """
+        {
+            "slug": "test",
+            "title": "test2"
+        }
+        """
     And The id data in the response JSON is the same as 101.
     And The title data in the response JSON is the same as test2.
     And It is True that a record with an ID of 101 exists in the Form model from apps.forms.models.

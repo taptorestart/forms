@@ -36,6 +36,16 @@ DATA_TYPES = {
 }
 
 
+def get_nested_value(data, key_path):
+    keys = key_path.split(":")
+    for key in keys:
+        if isinstance(data, dict) and key in data:
+            data = data[key]
+        else:
+            return None
+    return data
+
+
 @given(parsers.parse("I am a {user_type} user."), target_fixture="user")
 def i_am_a_user_type_user(user_type):
     if user_type == "anonymous":
@@ -111,6 +121,24 @@ def the_response_status_code_is_status_code(response, status_code):
     assert response.status_code == status_code
 
 
+@then("The response JSON should equal:")
+def the_response_json_should_equal(response, docstring):
+    expected_json = json.loads(docstring)
+    actual_json = response.json()
+
+    assert actual_json == expected_json
+
+
+@then("The response JSON should contain the following key-value pairs:")
+def the_response_json_should_equal(response, docstring):
+    expected_json = json.loads(docstring)
+    actual_json = response.json()
+
+    for key, value in expected_json.items():
+        assert key in actual_json
+        assert actual_json[key] == value
+
+
 @then(parsers.parse("The number of results in the response JSON is {number:d}."))
 def the_number_of_results_in_the_response_json_is_number(response, number):
     assert len(response.json()) == number
@@ -118,7 +146,7 @@ def the_number_of_results_in_the_response_json_is_number(response, number):
 
 @then(parsers.parse("The {field} data in the response JSON is the same as {value}."))
 def the_field_data_in_the_response_json_is_the_same_as_value(response, field, value):
-    assert str(response.json()[field]) == value
+    assert str(get_nested_value(response.json(), field)) == value
 
 
 @then(parsers.parse("The {field} data in the response JSON is of type {data_type} and the same as {value}."))
@@ -132,7 +160,8 @@ def the_field_data_in_the_response_json_is_of_type_data_type_and_is_the_same_as_
 
 @then(parsers.parse("The {field} data in the {index:d}th entry of the response JSON list is the same as {value}."))
 def the_field_data_in_the_index_th_entry_of_the_response_json_list_is_the_same_as_value(response, field, index, value):
-    assert str(response.json()[int(index) - 1][field]) == value
+    data = get_nested_value(response.json()[index - 1], field)
+    assert str(data) == value
 
 
 @then(
@@ -143,7 +172,8 @@ def the_field_data_in_the_index_th_entry_of_the_response_json_list_is_the_same_a
 def the_field_data_in_the_index_th_entry_of_the_response_json_results_list_is_of_type_data_type_and_the_same_as_value(
     response, field, index, value
 ):
-    assert str(response.json()[int(index) - 1][field]) == value
+    data = get_nested_value(response.json()[index - 1], field)
+    assert str(data) == value
 
 
 @then(parsers.parse("It is {existance} that a record with an ID of {pk:d} exists in the {model} model from {module}."))
