@@ -71,12 +71,9 @@ def i_am_making_a_method_request_to_path(client, method, path):
     return response
 
 
-@given(
-    parsers.parse("The following data will be sent.\n{data}"),
-    target_fixture="data",
-)
-def the_following_data_will_be_sent(data):
-    return json.loads(data)
+@given(parsers.parse("The following data will be sent:"), target_fixture="data")
+def the_following_data_will_be_sent(docstring):
+    return json.loads(docstring)
 
 
 @when(
@@ -99,13 +96,13 @@ def i_am_sending_a_method_request_to_path_with_data(client, method, path, data):
 
 
 @given(
-    parsers.parse("I will save the following data using {model_class_name} model.\n{data}"),
+    parsers.cfparse("I will save the following data using {model_class_name} model:"),
 )
-def i_will_save_the_following_data_using_factory_class_name_from_module(model_class_name: str, data: str):
+def i_will_save_the_following_data_using_factory_class_name_from_module(model_class_name: str, docstring):
     module = importlib.import_module("backend.tests.factories")
     factory_class_name = f"{model_class_name}Factory"
     factory_class = getattr(module, factory_class_name)
-    factory_class(**json.loads(data))
+    factory_class(**json.loads(docstring))
     return None
 
 

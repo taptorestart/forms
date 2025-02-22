@@ -3,7 +3,7 @@ Feature: Form Create Test
   Scenario Outline: Form Create Permission Test
     Given I am a <user_type> user.
     And I am logged in.
-    And The following data will be sent.
+    And The following data will be sent:
         """
         {
           "slug": "test",
@@ -23,7 +23,7 @@ Feature: Form Create Test
   Scenario: Form Create Test
     Given I am a staff user.
     And I am logged in.
-    And The following data will be sent.
+    And The following data will be sent:
         """
         {
           "slug": "test",

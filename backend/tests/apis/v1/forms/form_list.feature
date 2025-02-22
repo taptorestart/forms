@@ -1,7 +1,7 @@
 @django_db
 Feature: Form List Test
   Background:
-    Given I will save the following data using Form model.
+    Given I will save the following data using Form model:
           """
           {
             "id": 101,
