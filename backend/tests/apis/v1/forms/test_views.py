@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 
 from apps.forms.models import Component, Choice
-from tests.apis.factories import ComponentFactory, ChoiceFactory
+from tests.factories import ComponentFactory, ChoiceFactory
 
 
 @pytest.mark.urls(urls="apis.v1.urls")

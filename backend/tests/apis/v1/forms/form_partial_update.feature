@@ -1,7 +1,7 @@
 @django_db
-Feature: Form Update Test
+Feature: Form Partial Update Test
   Background:
-    Given I will save the following data using FormFactory from backend.tests.apis.factories.
+    Given I will save the following data using Form model.
           """
           {
             "id": 101,

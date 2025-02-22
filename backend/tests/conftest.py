@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from pytest_bdd import given, parsers, when, then
 from rest_framework.test import APIClient
 
-from tests.apis.factories import UserFactory
+from tests.factories import UserFactory
 
 
 @pytest.fixture
@@ -99,10 +99,11 @@ def i_am_sending_a_method_request_to_path_with_data(client, method, path, data):
 
 
 @given(
-    parsers.parse("I will save the following data using {factory_class_name} from {module}.\n{data}"),
+    parsers.parse("I will save the following data using {model_class_name} model.\n{data}"),
 )
-def i_will_save_the_following_data_using_factory_class_name_from_module(module: str, factory_class_name: str, data):
-    module = importlib.import_module(module)
+def i_will_save_the_following_data_using_factory_class_name_from_module(model_class_name: str, data: str):
+    module = importlib.import_module("backend.tests.factories")
+    factory_class_name = f"{model_class_name}Factory"
     factory_class = getattr(module, factory_class_name)
     factory_class(**json.loads(data))
     return None

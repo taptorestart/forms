@@ -8,9 +8,9 @@ from django.utils import timezone
 
 from apps.forms.models import Component
 from apps.forms.tasks import get_dataframe
-from tests.apis.factories import ComponentFactory
-from tests.apis.factories import FormFactory
-from tests.apis.factories import SubmitFactory, AnswerFactory, ChoiceFactory, UserFactory
+from tests.factories import ComponentFactory
+from tests.factories import FormFactory
+from tests.factories import SubmitFactory, AnswerFactory, ChoiceFactory, UserFactory
 
 
 @pytest.mark.django_db
